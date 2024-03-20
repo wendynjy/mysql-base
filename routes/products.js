@@ -3,6 +3,7 @@ const router = express.Router();
 
 // #1 import in the Product model
 const {Product} = require('../models');
+const dataLayer = require('../dal/products');
 
 // import in the Forms
 const { bootstrapField, createProductForm } = require('../forms');
@@ -46,11 +47,7 @@ router.post('/create', async(req,res)=>{
 router.get('/:product_id/update', async (req, res) => {
     // retrieve the product
     const productId = req.params.product_id
-    const product = await Product.where({
-        'id': productId
-    }).fetch({
-        require: true
-    });
+    const product = await dataLayer.getProductByID(productId);
 
     const productForm = createProductForm();
 

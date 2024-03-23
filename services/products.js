@@ -1,11 +1,8 @@
 const { Product } = require('../models');
+const dataLayer = require('../dal/products');
 
 const getProductByID = async (productId) => {
-    return await Product.where({
-        'id': parseInt(productId)
-    }).fetch({
-        require: true
-    });
+    return await dataLayer.getProductByID(productId);
 }
 const getAllProducts = async () => {
     return await Product.fetchAll();

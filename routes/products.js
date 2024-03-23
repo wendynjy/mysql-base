@@ -3,7 +3,7 @@ const router = express.Router();
 
 // #1 import in the Product model
 const {Product} = require('../models');
-const dataLayer = require('../dal/products');
+const serviceLayer = require('../services/products');
 
 // import in the Forms
 const { bootstrapField, createProductForm } = require('../forms');
@@ -47,7 +47,7 @@ router.post('/create', async(req,res)=>{
 router.get('/:product_id/update', async (req, res) => {
     // retrieve the product
     const productId = req.params.product_id
-    const product = await dataLayer.getProductByID(productId);
+    const product = await serviceLayer.getProductByID(productId);
 
     const productForm = createProductForm();
 
@@ -66,11 +66,8 @@ router.get('/:product_id/update', async (req, res) => {
 router.post('/:product_id/update', async (req, res) => {
 
     // fetch the product that we want to update
-    const product = await Product.where({
-        'id': req.params.product_id
-    }).fetch({
-        require: true
-    });
+    const productId = req.params.product_id
+    const product = await serviceLayer.getProductByID(productId);
 
     // process the form
     const productForm = createProductForm();
@@ -92,11 +89,8 @@ router.post('/:product_id/update', async (req, res) => {
 
 router.get('/:product_id/delete', async(req,res)=>{
     // fetch the product that we want to delete
-    const product = await Product.where({
-        'id': req.params.product_id
-    }).fetch({
-        require: true
-    });
+    const productId = req.params.product_id
+    const product = await serviceLayer.getProductByID(productId);
 
     res.render('products/delete', {
         'product': product.toJSON()
@@ -106,11 +100,9 @@ router.get('/:product_id/delete', async(req,res)=>{
 
 router.post('/:product_id/delete', async(req,res)=>{
     // fetch the product that we want to delete
-    const product = await Product.where({
-        'id': req.params.product_id
-    }).fetch({
-        require: true
-    });
+    const productId = req.params.product_id
+    const product = await serviceLayer.getProductByID(productId);
+    
     await product.destroy();
     res.redirect('/products')
 })
